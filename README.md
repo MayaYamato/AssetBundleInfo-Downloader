@@ -1,6 +1,10 @@
-# AssetBundleInfoDownloader
-バンドリ！ガールズバンドパーティーで使用されているファイル
-「AssetBundleInfo」に記されているファイルリストを一括でダウンロードするツールです。
+# AssetDownloader
+バンドリ！ガールズバンドパーティーで使用されているファイル<br>
+「AssetBundleInfo」に記されているファイルリストを一括でダウンロードするツールです。<br>
+Github初心者なので使い方勉強しがてら更新します。<br>
+テストブランチにツールに対応しているAssetBunldeInfo置いてあります。<br>
+いやあ差分をこうやって管理できるの良いっすね。勉強した甲斐があった。<br>
+
 
 使い方<br>
 AssetBundleInfo(私がGoogleDrive/Githubで紹介予定の整形版)を<br>
