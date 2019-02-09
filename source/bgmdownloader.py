@@ -4,8 +4,11 @@ import sys
 import fileinput
 import re
 import json
+import os
 
 download_dir_bgm = 'bgm'
+
+print(os.getcwd())
 
 if not os.path.exists(download_dir_bgm):
         os.makedirs(download_dir_bgm)
