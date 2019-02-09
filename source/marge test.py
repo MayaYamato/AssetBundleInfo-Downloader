@@ -1,13 +1,11 @@
 import os
 import requests
-import os
+import urllib.error
+import urllib.request
 
 #ダウンロードディレクトリの設定
 download_dir_asset = 'asset'
 download_dir_bgm = 'bgm'
-
-#カレントディレクトリ確認用
-#print(os.getcwd())
 
 #ダウンロードディレクトリがなければ新規作成する
 if not os.path.exists(download_dir_bgm):
@@ -28,8 +26,6 @@ def download_bgm(url,dst_path):
     download = requests.get(url)
     f5.write(download.content)
     f5.close()
-
-
 
 tmp = input("Which do you want, music or asset? asset = 1 music = 2 ⇒　").rstrip()
 
@@ -55,13 +51,13 @@ if int(tmp) == 1:
                     dst_path = os.path.join(download_dir_asset, new_filename)
 
                     if not os.path.exists(dst_path):
-                        download(url, dst_path)
+                        download_asset(url, dst_path)
                         break
                     else:
                         #既に重複ファイル回避がされていた場合さらにforを回す必要がある
                         continue
-                else:
-                    download(url, dst_path)
+            else:
+                download_asset(url, dst_path)
 
 if int(tmp) == 2:
 
@@ -75,3 +71,4 @@ if int(tmp) == 2:
             #pathの結合 asset/+filename
             dst_path = os.path.join(download_dir_bgm, filename)
             print(url)
+            download_bgm(url, dst_path)
