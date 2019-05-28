@@ -1,4 +1,4 @@
-# AssetDownloader
+# Bandori_Downloader
 バンドリ！ガールズバンドパーティーで使用されているファイル
 「AssetBundleInfo」に記されているファイルリストや
 配信されている楽曲ファイルをmp3形式で一括ダウンロードするツールです。
