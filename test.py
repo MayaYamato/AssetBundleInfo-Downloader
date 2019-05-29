@@ -1,17 +1,28 @@
 import os
 import re
+import codecs
 
-print('AssetBundleInfoを確認します')
-AWStext="https://d2ktlshvcuasnf.cloudfront.net/Release/$2/Android/$1"
-f = open('AssetBundleInfo.txt','w')
-#cp932でエンコードされるのを回避する
-with codec.open('AssetBundleInfo',"r","utf-8","ignore") as lines:
-  print('開いた')
-  for line in lines:
-    #rをつけるとバックスラッシュ関係の⇓のエラーが消える
-    #SyntaxError: (unicode error) 'unicodeescape' codec can't decode bytes in position 12-13: truncated \xXX escape
-    new_line1=re.sub(r'^[^a-z]?(.+)\x{0012}@[0-9a-f]+\x{001A}\x{0009}([\d.]+).+$',r"AWStext",line)
-    new_line2=re.sub('^(?!(https)).*$',"",new_line1)
-    new_line3=re.sub('^[\r\n]',"",new_line2)
-    print (str(new_line3))
-    f.write('str(new_line3)\n')
+tmp1 = input("android版とiOS版どっちが欲しい？(android=1 iOS=2)\n>> ").rstrip()
+if int(tmp1)==1:
+    OS='android'
+elif int(tmp1)==2:
+    OS='iOS'
+
+#文字列内に/が入る(path指定とか)場合rをつけると良い
+ABI='AssetBundleInfo'
+AWSURL=r'https://d2ktlshvcuasnf.cloudfront.net/Release/$2/'+str(OS)+'/$1'
+f1=r'^[^a-z]?(.+)\x{0012}@[0-9a-f]+\x{001A}\x{0009}([\d.]+).+$'
+f2=r'^(?!(https)).*$'
+f3='[\n\r]'
+
+print('AssetBundleInfoを確認します・・・')
+
+with codecs.open(ABI,"r","utf-8","ignore") as f:
+      print('正常に開くことに成功しました')
+      txt0=f.read()
+      txt1=re.sub(f1,AWSURL,txt0)
+      txt2=re.sub(f2,"",txt1)
+      newtxt=re.sub(f3,"",txt2)
+
+with open(ABI+'.txt',"w") as f:
+    f.write(new_txt)
