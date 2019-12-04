@@ -105,11 +105,11 @@ if int(tmp0) == 1:
     elif tmp3 == 'no' :
         exit()
 
-if int(tmp1) == 2:
+if int(tmp0) == 2:
     tmp2 = input('BGM id "How" many will you get?\nex:200 ⇒ BGM001~BGM200 Download').rstrip()
     l=int(tmp2)
     print('Downloading BGM')
-    for i in range (1, l):
+    for i in range (1, l+1):
         #music番号の桁数で場合分け
         if i<10 :
             url = (DBURL)+'00'+str(i)+'_rip/bgm'+'00'+str(i)+'.mp3'
