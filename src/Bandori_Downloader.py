@@ -10,9 +10,6 @@ os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
 download_dir_bgm = os.getcwd()+r'\bgm'
 
-#DBのURL
-DBURL = 'http://res.bandori.ga/assets/sound/bgm'
-
 #ダウンロードディレクトリがなければ新規作成する
 if not os.path.exists(download_dir_asset):
         os.makedirs(download_dir_asset)
@@ -37,8 +34,15 @@ def download_bgm(url,dst_path):
 
 tmp0 = input('Which do you want Asset or BGM? \n (Asset ⇒ 1 Bgm ⇒ 2 )\n>>').rstrip()
 if int(tmp0) == 1:
-    tmp1 =input('What version of ABI do you want?\n ex:2.0.0.300(18 Aprir) ⇒ 1\n ex:3.0.0.500(19 Aprir) ⇒ 2\n ex:Direct Input\n>>').rstrip()
-    if int(tmp1) == 1:
+
+    tmp1 =input('What version of ABI do you want?\n ex:latest version ⇒ 0\n ex:2.0.0.300(18 Aprir) ⇒ 1\n ex:3.0.0.500(19 Aprir) ⇒ 2\n ex:Direct Input\n>>').rstrip()
+    if int(tmp1) == 0:
+        with urllib.request.urlopen('https://github.com/esterTion/bangdream_master_db_diff/blob/master/!dataVersion.txt') as response:
+            html = response.read().decode() #responseで得たbyte列を変換
+            m = re.search(r'master: (.+)</a>', html)
+        ver = m.group()[8:17]
+        print(ver)
+    elif int(tmp1) == 1:
         ver = '2.0.0.300'
     elif int(tmp1) == 2:
         ver = '3.0.0.500'
@@ -46,10 +50,12 @@ if int(tmp0) == 1:
         ver = tmp1
 
     tmp2 = input("Which do you want android or iOS? \n(android ⇒ 1 iOS ⇒ 2 )\n>> ").rstrip()
-    if int(tmp1)==1:
+    if int(tmp2)==1:
         OS='android'
-    elif int(tmp1)==2:
+    elif int(tmp2)==2:
         OS='iOS'
+    else :
+        print('ERROR')
     
     #ABI ダウンロード
     print('ABI Downloading:')
@@ -78,27 +84,18 @@ if int(tmp0) == 1:
         print('Loading ABI')
         with open(r'asset/AssetBundleInfo.txt') as lines:
             for line in lines:
-                #折り返し,改行文字の削除
                 url = line.rstrip('\r\n')
-                #ファイルの保存名の設定
                 filename = os.path.basename(url)
-                #pathの結合 asset/+filename
                 dst_path = os.path.join(download_dir_asset, filename)
                 print(url)
-                #既存ファイルの存在判定
                 if os.path.exists(dst_path):
-                    #1000回までfor同一ファイル保存を回避できる
                     for n in range (1, 1000):
-                        #保存名をfilename+(n)に変更
                         new_filename = str(filename)  + '(' + str(n) + ')'
-                        #dst_pathの再設定(ファイルネームの変更)
                         dst_path = os.path.join(download_dir_asset, new_filename)
-
                         if not os.path.exists(dst_path):
                             download_asset(url, dst_path)
                             break
                         else:
-                            #既に重複ファイル回避がされていた場合さらにforを回す必要がある
                             continue
                 else:
                     download_asset(url, dst_path)
@@ -106,24 +103,25 @@ if int(tmp0) == 1:
         exit()
 
 if int(tmp0) == 2:
-    tmp2 = input('BGM id "How" many will you get?\nex:200 ⇒ BGM001~BGM200 Download').rstrip()
-    l=int(tmp2)
     print('Downloading BGM')
-    for i in range (1, l+1):
-        #music番号の桁数で場合分け
-        if i<10 :
-            url = (DBURL)+'00'+str(i)+'_rip/bgm'+'00'+str(i)+'.mp3'
-        elif i<=99 :
-            url = (DBURL)+'0'+str(i)+'_rip/bgm'+'0'+str(i)+'.mp3'
-        else:
-            url = (DBURL)+str(i)+'_rip/bgm'+str(i)+'.mp3'
-        #ファイルの保存名の設定
-        filename = os.path.basename(url)
-        #pathの結合 asset/+filename
-        dst_path = os.path.join(download_dir_bgm, filename)
-        print(url)
-        #既存bgmファイルがあったらダウンロードをしない
-        if os.path.exists(dst_path):
-            continue
-        else :
-            download_bgm(url, dst_path)
+    filename = os.path.basename('bgm.json')
+    dst_path = os.path.join(download_dir_bgm, filename)
+    print(dst_path)
+    print(filename)
+    download_bgm('https://res.bandori.ga/assets/sound/', dst_path)
+
+    with open(dst_path) as lines:
+        for line in lines:
+            m = re.search(r'bgm(.+)_rip', line)
+            if m == None:
+                continue
+            else:
+                url = 'http://res.bandori.ga/assets/sound/'+str(m.group()[:-4])+'_rip/'+str(m.group()[:-4])+'.mp3'
+                filename = os.path.basename(url)
+                dst_path = os.path.join(download_dir_bgm, filename)
+                print(url)
+                if os.path.exists(dst_path):
+                    continue
+                else :
+                    download_bgm(url, dst_path)
+    os.remove(os.getcwd()+r'\bgm\bgm.json')
