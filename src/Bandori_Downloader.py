@@ -20,17 +20,18 @@ if not os.path.exists(download_dir_bgm):
 def download_asset(url, dst_path):
     try:
         data = urllib.request.urlopen(url).read()
-        with open(dst_path, mode="wb") as f:
-            f.write(data)
+        with open(dst_path, mode="wb") as f0:
+            f0.write(data)
     except urllib.error.URLError as e:
-        print(e)
+        pass
 
-#BGMのダウンロード関数
 def download_bgm(url,dst_path):
-    f5 = open(dst_path,'wb')
-    download = requests.get(url)
-    f5.write(download.content)
-    f5.close()
+    try:
+        download = requests.get(url)
+        with open(dst_path,'wb') as f1:
+            f1.write(download.content)
+    except urllib.error.URLError as e:
+        pass
 
 tmp0 = input('Which do you want Asset or BGM? \n (Asset ⇒ 1 Bgm ⇒ 2 )\n>>').rstrip()
 if int(tmp0) == 1:
@@ -66,9 +67,12 @@ if int(tmp0) == 1:
 
     #ABI 整形
     print('ABI Download complete\nShaping ABI started')
+    seiki = r'^(?!.*'+str(ver)+r').*$'
+    if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo.txt'):
+        os.remove(os.getcwd()+r'\asset\AssetBundleInfo.txt')
     with codecs.open(r'asset/AssetBundleInfo',"r","cp932","ignore") as lines:
         for line in lines:
-            txt0=re.sub(r'^(?!.*@).*$','',line)
+            txt0=re.sub(seiki,'',line)
             txt1=re.sub(r'^\n|\r','',txt0)
             txt2=re.sub(r'@.*?\n','\n',txt1)
             txt3=re.sub(r'@.*?\Z','\n',txt2)
@@ -87,7 +91,6 @@ if int(tmp0) == 1:
                 url = line.rstrip('\r\n')
                 filename = os.path.basename(url)
                 dst_path = os.path.join(download_dir_asset, filename)
-                print(url)
                 if os.path.exists(dst_path):
                     for n in range (1, 1000):
                         new_filename = str(filename)  + '(' + str(n) + ')'
@@ -101,6 +104,7 @@ if int(tmp0) == 1:
                     download_asset(url, dst_path)
     elif tmp3 == 'no' :
         exit()
+    print('Download complete')
 
 if int(tmp0) == 2:
     print('Downloading BGM')
