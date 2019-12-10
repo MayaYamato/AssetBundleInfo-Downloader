@@ -6,17 +6,14 @@ import urllib.error
 import urllib.request
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
-#ダウンロードディレクトリの設定
 download_dir_asset = os.getcwd()+r'\asset'
 download_dir_bgm = os.getcwd()+r'\bgm'
 
-#ダウンロードディレクトリがなければ新規作成する
 if not os.path.exists(download_dir_asset):
         os.makedirs(download_dir_asset)
 if not os.path.exists(download_dir_bgm):
         os.makedirs(download_dir_bgm)
 
-#Assetのダウンロード関数
 def download_asset(url, dst_path):
     try:
         data = urllib.request.urlopen(url).read()
@@ -52,7 +49,7 @@ if int(tmp0) == 1:
 
     tmp2 = input("Which do you want android or iOS? \n(android ⇒ 1 iOS ⇒ 2 )\n>> ").rstrip()
     if int(tmp2)==1:
-        OS='android'
+        OS='Android'
     elif int(tmp2)==2:
         OS='iOS'
     else :
@@ -67,11 +64,11 @@ if int(tmp0) == 1:
 
     #ABI 整形
     print('ABI Download complete\nShaping ABI started')
-    seiki = r'^(?!.*'+str(ver)+r').*$'
     if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo.txt'):
         os.remove(os.getcwd()+r'\asset\AssetBundleInfo.txt')
     with codecs.open(r'asset/AssetBundleInfo',"r","cp932","ignore") as lines:
         for line in lines:
+            seiki = r'^(?!.*'+str(ver)+r').*$'
             txt0=re.sub(seiki,'',line)
             txt1=re.sub(r'^\n|\r','',txt0)
             txt2=re.sub(r'@.*?\n','\n',txt1)
@@ -82,7 +79,6 @@ if int(tmp0) == 1:
     print('Complete\n')
 
     tmp3=input('Do you want to download asset? yes or no\n>>')
-
     if tmp3 == 'yes' :
         #Assetのダウンロード
         print('Loading ABI')
