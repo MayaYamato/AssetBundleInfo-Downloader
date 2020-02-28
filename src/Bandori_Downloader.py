@@ -5,7 +5,6 @@ import requests
 import urllib.error
 import urllib.request
 
-###Test
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
