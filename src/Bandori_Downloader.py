@@ -26,8 +26,8 @@ def download_asset(url, dst_path):
 def download_bgm(url,dst_path):
     try:
         download = requests.get(url)
-        with open(dst_path,'wb') as f1:
-            f1.write(download.content)
+        with open(dst_path,'wb') as f0:
+            f0.write(download.content)
     except urllib.error.URLError as e:
         pass
 
