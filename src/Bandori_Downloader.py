@@ -5,7 +5,6 @@ import requests
 import urllib.error
 import urllib.request
 
-
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
 download_dir_bgm = os.getcwd()+r'\bgm'
@@ -66,13 +65,14 @@ if int(tmp0) == 1:
     dst_path = os.path.join(download_dir_asset, filename)
     download_asset(url, dst_path)
 
-    #ABI 整形
+    #ABI 整形 (現行バージョン対応版)
+    #前まではversionが各文字列に入っているため両方への適応とかは別の関数を実装してそこで処理する
     print('ABI Download complete\nShaping ABI started')
     if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo.txt'):
         os.remove(os.getcwd()+r'\asset\AssetBundleInfo.txt')
     with codecs.open(r'asset/AssetBundleInfo',"r","cp932","ignore") as lines:
         for line in lines:
-            if '@' in line:
+            if '@' in line and not str(ver) in line and not len(line) < 9:
                 new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
                 with open(r'asset/AssetBundleInfo.txt',"a") as f:
                     f.write(new_txt)
