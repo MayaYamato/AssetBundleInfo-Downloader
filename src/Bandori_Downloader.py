@@ -18,7 +18,7 @@ if not os.path.exists(download_dir_bgm):
 def download_asset(url, dst_path):
     try:
         data = urllib.request.urlopen(url).read()
-        with open(dst_path, mode="wb") as f0:
+        with open(dst_path,'wb') as f0:
             f0.write(data)
     except urllib.error.URLError as e:
         pass
@@ -33,7 +33,7 @@ def download_bgm(url,dst_path):
 
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
-VERSIONURL = 'https://github.com/esterTion/bangdream_master_db_diff/blob/master/!dataVersion.txt'
+VERSIONURL = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt'
 
 tmp0 = input('Which do you want Asset or BGM? \n (Asset ⇒ 1 Bgm ⇒ 2 )\n>>').rstrip()
 if int(tmp0) == 1:
@@ -42,8 +42,7 @@ if int(tmp0) == 1:
     if int(tmp1) == 0:
         with urllib.request.urlopen(VERSIONURL) as response:
             html = response.read().decode() #responseで得たbyte列を変換
-            m = re.search(r'master: (.+)</a>', html)
-        ver = m.group()[8:17]
+            ver = html[:-1]
         print(ver)
     elif int(tmp1) == 1:
         ver = '2.0.0.300'
@@ -73,14 +72,10 @@ if int(tmp0) == 1:
         os.remove(os.getcwd()+r'\asset\AssetBundleInfo.txt')
     with codecs.open(r'asset/AssetBundleInfo',"r","cp932","ignore") as lines:
         for line in lines:
-            seiki = r'^(?!.*'+str(ver)+r').*$'
-            txt0=re.sub(seiki,'',line)
-            txt0=re.sub(r'^\n|\r','',txt0)
-            txt0=re.sub(r'@.*?\n','\n',txt0)
-            txt0=re.sub(r'@.*?\Z','\n',txt0)
-            new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',txt0)
-            with open(r'asset/AssetBundleInfo.txt',"a") as f:
-                f.write(new_txt)
+            if '@' in line:
+                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
+                with open(r'asset/AssetBundleInfo.txt',"a") as f:
+                    f.write(new_txt)
     print('Complete\n')
 
     tmp3=input('Do you want to download asset? yes or no\n>>')
@@ -103,6 +98,7 @@ if int(tmp0) == 1:
                             continue
                 else:
                     download_asset(url, dst_path)
+
     elif tmp3 == 'no' :
         exit()
     print('Download complete')
