@@ -1,17 +1,12 @@
 # Bandori_Downloader
-バンドリ！ガールズバンドパーティーで使用されているファイル(Asset)の管理表<br>
-AssetBundleInfo及びAssetのダウンロード,<br>
-配信されている楽曲ファイルをmp3形式で一括ダウンロードするツールです。<br>
+This tool downloads "AssetBundleInfo", asset and music file used in Bandori<br>
 
-# 使い方
-起動すればとりあえずわかると思います<br>
+# How To Use
+Follow the interaction with the tool<br>
+If you have any question, Contact me  
+https://raspberrypi422.mydns.jp/ <br>
+Twitter: NEXTREME_VS <br>
 
-# 直近の更新履歴
------version 1.07-----<br>
-・全Assetダウンロード機能を改善<br>
-・tutorial(ダウンロード不可URL)をスキップするように<br>
-・負荷軽減のためAssetダウンロード時のprint文の削除<br>
-・既に整形済みABIが存在するとき, 新しく整形済みABIを作成するように<br>
-
-# 次の更新予定
-募集中
+# Thanks
+Bandori Database https://bandori.ga/
+estertion https://github.com/esterTion/bangdream_master_db_diff/
