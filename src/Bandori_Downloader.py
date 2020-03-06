@@ -153,8 +153,6 @@ if int(tmp) == 1:
                 else:
                     download_asset(url, dst_path)
         print('Download complete')
-    elif tmp == 'no' :
-        exit()
     else:
         exit()
 
