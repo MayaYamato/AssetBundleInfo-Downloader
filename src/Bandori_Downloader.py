@@ -108,7 +108,7 @@ if int(tmp) == 1:
         #OLD ABI Shaping
         with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
             for line in lines:
-                seiki = r'^(?!.*'+str(ver)]+r').*$'
+                seiki = r'^(?!.*'+str(ver)+r').*$'
                 txt0=re.sub(seiki,'',line)
                 txt0=re.sub(r'^\n|\r','',txt0)
                 txt0=re.sub(r'@.*?\n','\n',txt0)
