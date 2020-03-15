@@ -25,7 +25,7 @@ def download_bgm(url,dst_path):
         print(e.reason)
         pass
 
-version = 1.10
+version = 1.11
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
 GITHUBURL = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
@@ -102,25 +102,13 @@ if int(tmp) == 1:
     dst_path = os.path.join(download_dir_asset, filename)
     download_asset(url, dst_path)
     print('ABI Download complete\nShaping ABI started')
-
-    #NEW ABI Shaping
-    if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
-            os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
-    if int(tmpex) == 0:
-        with codecs.open(r'asset\AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
-            for line in lines:
-                if '@' in line and len(line) > 60:
-                    new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
-                    with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
-                        f.write(new_txt)
-                else:
-                    pass
-                
-    #Old ABI Shaping
-    else:
+    tmp = input("\nChoose Shaping ABI method\n###OLD is the old shaping method, but this became effective with the update on March 16, 2020.\n(OLD ⇒ 1 NEW ⇒ 2)\n>> ").rstrip()
+    
+    if int(tmp)==1:
+        #OLD ABI Shaping
         with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
             for line in lines:
-                seiki = r'^(?!.*'+str(ver)+r').*$'
+                seiki = r'^(?!.*'+str(ver)]+r').*$'
                 txt0=re.sub(seiki,'',line)
                 txt0=re.sub(r'^\n|\r','',txt0)
                 txt0=re.sub(r'@.*?\n','\n',txt0)
@@ -128,6 +116,22 @@ if int(tmp) == 1:
                 new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'/'+str(OS)+r'/\1\n',txt0)
                 with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
                     f.write(new_txt)
+
+    elif int(tmp)==2:
+        #NEW ABI Shaping
+        if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
+                os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
+        if int(tmpex) == 0:
+            with codecs.open(r'asset\AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
+                for line in lines:
+                    if '@' in line and len(line) > 60:
+                        new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
+                        with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
+                            f.write(new_txt)
+                    else:
+                        pass
+    else :
+        print('ERROR')
 
     print('Complete\n')
 
@@ -153,6 +157,8 @@ if int(tmp) == 1:
                 else:
                     download_asset(url, dst_path)
         print('Download complete')
+    elif tmp == 'no' :
+        exit()
     else:
         exit()
 
