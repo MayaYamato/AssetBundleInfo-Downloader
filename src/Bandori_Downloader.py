@@ -11,8 +11,6 @@ def download_asset(url, dst_path):
         with open(dst_path,'wb') as f0:
             f0.write(data)
     except urllib.error.URLError as e:
-        print('Error')
-        print(e.reason)
         pass
 
 def download_bgm(url,dst_path):
@@ -21,8 +19,6 @@ def download_bgm(url,dst_path):
         with open(dst_path,'wb') as f0:
             f0.write(download.content)
     except urllib.error.URLError as e:
-        print('Error')
-        print(e.reason)
         pass
 
 version = 1.11
@@ -106,6 +102,8 @@ if int(tmp) == 1:
     
     if int(tmp)==1:
         #OLD ABI Shaping
+        if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
+            os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
         with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
             for line in lines:
                 seiki = r'^(?!.*'+str(ver)+r').*$'
@@ -121,15 +119,14 @@ if int(tmp) == 1:
         #NEW ABI Shaping
         if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
                 os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
-        if int(tmpex) == 0:
-            with codecs.open(r'asset\AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
-                for line in lines:
-                    if '@' in line and len(line) > 60:
-                        new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
-                        with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
-                            f.write(new_txt)
-                    else:
-                        pass
+        with codecs.open(r'asset\AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
+            for line in lines:
+                if '@' in line and len(line) > 60:
+                    new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
+                    with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
+                        f.write(new_txt)
+                else:
+                    pass
     else :
         print('ERROR')
 
@@ -140,7 +137,7 @@ if int(tmp) == 1:
     tmp=input('>>')
     if tmp == 'yes' :
         print('Loading ABI')
-        with open(r'AssetBundleInfo ver '+str(ver)+' .txt') as lines:
+        with open(r'asset/AssetBundleInfo ver '+str(ver)+' .txt') as lines:
             for line in lines:
                 url = line.rstrip('\r\n')
                 filename = os.path.basename(url)
