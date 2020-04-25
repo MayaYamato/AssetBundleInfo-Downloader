@@ -21,7 +21,7 @@ def download_bgm(url,dst_path):
     except urllib.error.URLError as e:
         pass
 
-version = 1.11
+version = 1.12
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
 GITHUBURL = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
@@ -94,7 +94,10 @@ if int(tmp) == 1:
     #ABI Download
     print('\nABI Downloading:')
     filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
-    url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
+    if int(tmpex) == 0:
+        url = AWSURL +str(ver)+'_p3HzsCWjkY/'+str(OS)+r'/AssetBundleInfo'
+    else:
+        url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
     dst_path = os.path.join(download_dir_asset, filename)
     download_asset(url, dst_path)
     print('ABI Download complete\nShaping ABI started')
