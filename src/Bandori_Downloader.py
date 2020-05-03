@@ -21,7 +21,7 @@ def download_bgm(url,dst_path):
     except urllib.error.URLError as e:
         pass
 
-version = 1.12
+version = 1.13
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
 GITHUBURL = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
@@ -101,9 +101,24 @@ if int(tmp) == 1:
     dst_path = os.path.join(download_dir_asset, filename)
     download_asset(url, dst_path)
     print('ABI Download complete\nShaping ABI started')
-    tmp = input("\nChoose Shaping ABI method\n###OLD is the old shaping method, but this became effective with the update on March 16, 2020.\n(OLD ⇒ 1 NEW ⇒ 2)\n>> ").rstrip()
+    tmp = input("\nChoose Shaping ABI method\n###OLD is the old shaping method, but this became effective with the update on March 16, 2020.\n###Choose latest if you want to format the latest ABI\n(latest ⇒ 0 OLD ⇒ 1 NEW ⇒ 2)\n>> ").rstrip()
     
-    if int(tmp)==1:
+    if int(tmp)==0:
+        #latest ABI Shaping
+        if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
+            os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
+        with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
+            for line in lines:
+                seiki = r'^(?!.*'+str(ver)+r').*$'
+                txt0=re.sub(seiki,'',line)
+                txt0=re.sub(r'^\n|\r','',txt0)
+                txt0=re.sub(r'@.*?\n','\n',txt0)
+                txt0=re.sub(r'@.*?\Z','\n',txt0)
+                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_p3HzsCWjkY/'+str(OS)+r'/\1\n',txt0)
+                with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
+                    f.write(new_txt)
+
+    elif int(tmp)==1:
         #OLD ABI Shaping
         if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
             os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
