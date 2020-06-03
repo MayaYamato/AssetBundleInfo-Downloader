@@ -21,7 +21,7 @@ def download_bgm(url,dst_path):
     except urllib.error.URLError as e:
         pass
 
-version = 1.13
+version = 2.0
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
 GITHUBURL = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
@@ -33,7 +33,7 @@ download_dir_bgm = os.getcwd()+r'\bgm'
 
 print('Bandori_Downloader v'+str(version)+'\n')
 print('Created By:VERSUS.log\n### Please comment or reply if you have any errors or qustions\n')
-print('Twitter:@NEXTREME_VS\nBlog URL:https://raspberrypi422.mydns.jp\nGithub Repository:https://github.com/MayaYamato/Bandori_Downloader')
+print('Twitter:@72G_VS\nBlog URL:https://raspberrypi422.mydns.jp\nGithub Repository:https://github.com/MayaYamato/Bandori_Downloader')
 print('### Thanks to external links used in this tool ...\n')
 
 #Version Check
@@ -42,6 +42,7 @@ with urllib.request.urlopen(GITHUBURL) as response:
     html = response.read().decode() #responseで得たbyte列を変換
     exever = html[:-1]
 
+#Version Update
 if float(exever) - float(version) > 0:
     print('New Version Released:'+str(exever)+'\n')
     tmp =input('Do you want to upgrade? yes or no\n>>')
@@ -90,20 +91,24 @@ if int(tmp) == 1:
         OS='iOS'
     else :
         print('ERROR')
-    
-    #ABI Download
-    print('\nABI Downloading:')
-    filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
-    if int(tmpex) == 0:
-        url = AWSURL +str(ver)+'_p3HzsCWjkY/'+str(OS)+r'/AssetBundleInfo'
-    else:
-        url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
-    dst_path = os.path.join(download_dir_asset, filename)
-    download_asset(url, dst_path)
-    print('ABI Download complete\nShaping ABI started')
-    tmp = input("\nChoose Shaping ABI method\n###OLD is the old shaping method, but this became effective with the update on March 16, 2020.\n###Choose latest if you want to format the latest ABI\n(latest ⇒ 0 OLD ⇒ 1 NEW ⇒ 2)\n>> ").rstrip()
+
+    #ABI Shaping
+    tmp = input("\nChoose Shaping ABI method\n###Choose latest if you want to format the latest ABI,\n###OLD is effective against ABI before 2020\n(NEW ⇒ 0 OLD ⇒ 1)\n>> ").rstrip()
     
     if int(tmp)==0:
+        tmp = input("Please enter the URL change character string. \n(This character string can be confirmed by packet capture etc. If you do not understand the meaning, ask the author)\nforexample:_p3HzsCWjkY\n>>").rstrip()
+        
+        #ABI Download
+        print('\nABI Downloading:')
+        filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
+        if int(tmpex) == 0:
+            url = AWSURL +str(ver)+str(tmp)+'/'+str(OS)+r'/AssetBundleInfo'
+        else:
+            url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
+        dst_path = os.path.join(download_dir_asset, filename)
+        download_asset(url, dst_path)
+        print('ABI Download complete\nShaping ABI started')
+
         #latest ABI Shaping
         if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
             os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
@@ -114,11 +119,22 @@ if int(tmp) == 1:
                 txt0=re.sub(r'^\n|\r','',txt0)
                 txt0=re.sub(r'@.*?\n','\n',txt0)
                 txt0=re.sub(r'@.*?\Z','\n',txt0)
-                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_p3HzsCWjkY/'+str(OS)+r'/\1\n',txt0)
+                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+str(tmp)+'/'+str(OS)+r'/\1\n',txt0)
                 with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
                     f.write(new_txt)
 
     elif int(tmp)==1:
+
+        #ABI Download
+        print('\nABI Downloading:')
+        filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
+        if int(tmpex) == 0:
+            url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
+        else:
+            url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
+        dst_path = os.path.join(download_dir_asset, filename)
+        download_asset(url, dst_path)
+
         #OLD ABI Shaping
         if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
             os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
@@ -132,19 +148,6 @@ if int(tmp) == 1:
                 new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'/'+str(OS)+r'/\1\n',txt0)
                 with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
                     f.write(new_txt)
-
-    elif int(tmp)==2:
-        #NEW ABI Shaping
-        if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
-                os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
-        with codecs.open(r'asset\AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
-            for line in lines:
-                if '@' in line and len(line) > 60:
-                    new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',AWSURL+str(ver)+'/'+str(OS)+r'/\1\n',line)
-                    with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
-                        f.write(new_txt)
-                else:
-                    pass
     else :
         print('ERROR')
 
