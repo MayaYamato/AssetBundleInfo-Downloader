@@ -36,7 +36,7 @@ def download_bgm(url,dst_path):
     except urllib.error.URLError as e:
         pass
 
-def Version_Check_Update(url,dst_path):
+def Version_Check_Update(url):
     print('Version Checking ... ')
     with urllib.request.urlopen(url) as response:
         html = response.read().decode() #responseで得たbyte列を変換
@@ -45,8 +45,6 @@ def Version_Check_Update(url,dst_path):
         print('New Version Released:'+str(exever)+'\n')
         tmp =input('Do you want to upgrade? yes or no\n>>')
         if tmp == 'yes':
-            filename = os.path.basename('Bandori_Downloader ver:'+str(exever)+'.rar')
-            dst_path = os.path.join(os.getcwd(), filename)
             download_bgm(r'https://github.com/MayaYamato/Bandori_Downloader/releases/download/v'+str(exever)+r'/Bandori_Downloader.exe',dst_path)
             print('Download Complete')
             exit()
@@ -67,6 +65,9 @@ def ABI_Download(ver,tmp,OS,dst_path):
     print('ABI Download complete\nShaping ABI started')
 
 ### main source ###
+
+### Version Check ##
+Version_Check_Update(GITHUBURL)
 
 ### Asset or BGM ###
 tmp = input('Which do you want Asset or BGM? \n (Asset ⇒ 0 Bgm ⇒ 1 )\n>>').rstrip()
