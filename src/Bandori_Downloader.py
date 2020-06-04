@@ -5,7 +5,7 @@ import requests
 import urllib.error
 import urllib.request
 
-version = 2.0
+version = 3.0
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
 GITHUBURL = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
@@ -16,11 +16,11 @@ download_dir_asset = os.getcwd()+r'\asset'
 download_dir_bgm = os.getcwd()+r'\bgm'
 
 print('Bandori_Downloader v'+str(version)+'\n')
-print('Created By:VERSUS.log\n### Please comment or reply if you have any errors or qustions\n')
+print('Created By:VERSUS.log\nPlease comment or reply if you have any errors or qustions\nIf you would like to send your opinion freely, please use this question box.\n>>https://peing.net/ja/72g_vs\n')
 print('Twitter:@72G_VS\nBlog URL:https://raspberrypi422.mydns.jp\nGithub Repository:https://github.com/MayaYamato/Bandori_Downloader')
 print('### Thanks to external links used in this tool ...\n')
 
-def download_asset(url, dst_path):
+def download_asset(url,dst_path):
     try:
         data = urllib.request.urlopen(url).read()
         with open(dst_path,'wb') as f0:
@@ -48,8 +48,6 @@ def Version_Check_Update(url):
             download_bgm(r'https://github.com/MayaYamato/Bandori_Downloader/releases/download/v'+str(exever)+r'/Bandori_Downloader.exe',dst_path)
             print('Download Complete')
             exit()
-        elif tmp == 'no':
-            pass
         else:
             pass
     else:
@@ -58,13 +56,13 @@ def Version_Check_Update(url):
 def ABI_Download(ver,tmp,OS,dst_path):
     print('\nABI Downloading:')
     if len(tmp) > 2:
-        url = AWSURL +str(ver)+str(tmp)+'/'+str(OS)+r'/AssetBundleInfo'
+        url = AWSURL +str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/AssetBundleInfo'
     else:
         url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
     download_asset(url, dst_path)
     print('ABI Download complete\nShaping ABI started')
 
-### main source ###
+####################### main source #######################
 
 ### Version Check ##
 Version_Check_Update(GITHUBURL)
@@ -79,7 +77,7 @@ if int(tmp) == 0:
         os.makedirs(download_dir_asset)
 
     ### ABI Version ###
-    tmp =input('\nWhat version of ABI do you want?\n ex:latest version ⇒ 0\n ex:2.0.0.300(18 Aprir) ⇒ 1\n ex:3.0.0.500(19 Aprir) ⇒ 2\n ex:Direct Input\n>>').rstrip()
+    tmp =input('\nWhat version of ABI do you want?\n latest version ⇒ 0\n 2.0.0.300(18Aprir) ⇒ 1\n 3.0.0.500(19Aprir) ⇒ 2\n Direct Input\n>>').rstrip()
     if int(tmp) == 0:
         with urllib.request.urlopen(VERSIONURL) as response:
             html = response.read().decode() #responseで得たbyte列を変換
@@ -105,7 +103,7 @@ if int(tmp) == 0:
     tmp = input("\nChoose Shaping ABI method\n###Choose Latest if you want to format the latest ABI,\n###Old is effective against ABI before 2020\n(Latest ⇒ 0 Old ⇒ 1)\n>> ").rstrip()
     
     if int(tmp)==0:
-        tmp = input("Please enter the URL change character string. \n(This character string can be confirmed by packet capture etc. If you do not understand the meaning, ask the author)\nforexample:_p3HzsCWjkY\n>>").rstrip()
+        tmp = input("Please enter the URL change character string. \n(This character string can be confirmed by packet capture etc. If you do not understand the meaning, ask the author)\nforexample:p3HzsCWjkY\n>>").rstrip()
         filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
         dst_path = os.path.join(download_dir_asset, filename)
         ABI_Download(ver,tmp,OS,dst_path)
@@ -120,7 +118,7 @@ if int(tmp) == 0:
                 txt0=re.sub(r'^\n|\r','',txt0)
                 txt0=re.sub(r'@.*?\n','\n',txt0)
                 txt0=re.sub(r'@.*?\Z','\n',txt0)
-                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+str(tmp)+'/'+str(OS)+r'/\1\n',txt0)
+                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/\1\n',txt0)
                 with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
                     f.write(new_txt)
 
@@ -144,32 +142,37 @@ if int(tmp) == 0:
                     f.write(new_txt)
     else :
         print("ERROR")
-
     print("Complete\n")
 
     ### All Asset Download ###
-    tmp = input("Do you want to download all asset?\n### But not recommended to download:Too many assets. yes ⇒ 0 no ⇒ 1\n>>")
+    tmp = input("Do you want to download all asset or only assets that contain a specific string?\n### But not recommended to download:Too many assets. all yes ⇒ 0 only asset ⇒ 1 no ⇒ 2\n>>")
     if int(tmp) == 0 :
         print('Loading ABI')
         with open(r'asset/AssetBundleInfo ver '+str(ver)+' .txt') as lines:
             for line in lines:
-                url = line.rstrip('\r\n')
-                filename = os.path.basename(url)
-                dst_path = os.path.join(download_dir_asset, filename)
-                if os.path.exists(dst_path):
-                    for n in range (1, 1000):
-                        new_filename = str(filename)  + '(' + str(n) + ')'
-                        dst_path = os.path.join(download_dir_asset, new_filename)
-                        if not os.path.exists(dst_path):
-                            download_asset(url, dst_path)
-                            break
-                        else:
-                            continue
+                if "sound/voice/scenario/loginstory13" in line:
+                    continue
                 else:
+                    url = line.rstrip('\r\n')
+                    filename = url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):]
+                    dst_path = os.path.join(download_dir_asset, filename)
                     download_asset(url, dst_path)
         print("Download complete")
     elif int(tmp) == 1 :
-        exit()
+        tmp = input("Enter the specific character string you want:\nex:live2d\n>>")
+        print('Loading ABI')
+        with open(r'asset/AssetBundleInfo ver '+str(ver)+' .txt') as lines:
+            for line in lines:
+                if "sound/voice/scenario/loginstory13" in line:
+                    continue
+                else:
+                    if str(tmp) in line:
+                        url = line.rstrip('\r\n')
+                        filename = url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):]
+                        dst_path = os.path.join(download_dir_asset, filename)
+                        download_asset(url, dst_path)
+                    else:
+                        continue
     else:
         exit()
 
@@ -182,8 +185,6 @@ elif int(tmp) == 1:
     print('Downloading BGM')
     filename = os.path.basename('bgm.json')
     dst_path = os.path.join(download_dir_bgm, filename)
-    print(dst_path)
-    print(filename)
     download_bgm(BGMURL, dst_path)
 
     with open(dst_path) as lines:
