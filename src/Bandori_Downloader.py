@@ -11,15 +11,27 @@ local_version = 3.0
 url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 url_BGM = 'https://res.bandori.ga/assets/sound/'
 url_version = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
-url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases/latest'
-url_ABIversion = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt'
+url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases/'
+url_ABIversion = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt\n'
+name_software = os.path.basename(os.path.abspath(__file__))
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
 download_dir_bgm = os.getcwd()+r'\bgm'
+download_dir_exe = os.getcwd()+r'\update_exe'
+dst_path_exe = os.path.join(download_dir_exe, os.path.basename(os.path.abspath(__file__)))
 
+### MAKE DIRECTORY ###
+if not os.path.exists(download_dir_asset):
+    os.makedirs(download_dir_asset)
+if not os.path.exists(download_dir_bgm):
+    os.makedirs(download_dir_bgm)
+if not os.path.exists(download_dir_exe):
+    os.makedirs(download_dir_exe)
+
+### SET FUNCTION ###
 def ABI_Download(ver,tmp,OS,dst_path):
-    print('\nABI Downloading:')
+    print('ABI Downloading:')
     if len(tmp) > 2:
         url = AWSURL +str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/AssetBundleInfo'
     else:
@@ -27,11 +39,11 @@ def ABI_Download(ver,tmp,OS,dst_path):
     download_asset(url, dst_path)
     print('ABI Download complete\nShaping ABI started')
 
-####################### main source #######################
+####### MAIN SOURCE #######
 introduce(local_version)
 
-### Version Check ##
-update_check(local_version,url_version,url_github,path)
+### Version Check ###
+update_check(local_version,url_version,url_github)
 
 ### Asset or BGM ###
 tmp = input('Which do you want Asset or BGM? \n (Asset ⇒ 0 Bgm ⇒ 1 )\n>>').rstrip()
