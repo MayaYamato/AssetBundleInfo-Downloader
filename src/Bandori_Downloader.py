@@ -1,58 +1,22 @@
 import os
 import re
-#import mylib
+import mylib
 import codecs
 import requests
 import urllib.error
 import urllib.request
 
+### SET VARIABLE ###
 local_version = 3.0
-AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
-BGMURL = 'https://res.bandori.ga/assets/sound/'
-url_github = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
-VERSIONURL = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt'
+url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
+url_BGM = 'https://res.bandori.ga/assets/sound/'
+url_version = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
+url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases/latest'
+url_ABIversion = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt'
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
 download_dir_bgm = os.getcwd()+r'\bgm'
-
-print('Bandori_Downloader v'+str(local_version)+'\n')
-print('Created By:VERSUS.log\nPlease comment or reply if you have any errors or qustions\nIf you would like to send your opinion freely, please use this question box.\n>>https://peing.net/ja/72g_vs\n')
-print('Twitter:@227_VS\nBlog URL:https://raspberrypi422.mydns.jp\nGithub Repository:https://github.com/MayaYamato/Bandori_Downloader')
-print('### Thanks to external links used in this tool ...\n')
-
-def download_asset(url,dst_path):
-    try:
-        data = urllib.request.urlopen(url).read()
-        with open(dst_path,'wb') as f0:
-            f0.write(data)
-    except urllib.error.URLError as e:
-        pass
-
-def download_bgm(url,dst_path):
-    try:
-        download = requests.get(url)
-        with open(dst_path,'wb') as f0:
-            f0.write(download.content)
-    except urllib.error.URLError as e:
-        pass
-
-def Version_Check_Update(url):
-    print('Version Checking ... ')
-    with urllib.request.urlopen(url) as response:
-        html = response.read().decode() #responseで得たbyte列を変換
-        exever = html[:-1]
-    if float(exever) - float(version) > 0:
-        print('New Version Released:'+str(exever)+'\n')
-        tmp =input('Do you want to upgrade? yes or no\n>>')
-        if tmp == 'yes':
-            download_bgm(r'https://github.com/MayaYamato/Bandori_Downloader/releases/download/v'+str(exever)+r'/Bandori_Downloader.exe',dst_path)
-            print('Download Complete')
-            exit()
-        else:
-            pass
-    else:
-        print('Latest Version\n')
 
 def ABI_Download(ver,tmp,OS,dst_path):
     print('\nABI Downloading:')
@@ -64,9 +28,10 @@ def ABI_Download(ver,tmp,OS,dst_path):
     print('ABI Download complete\nShaping ABI started')
 
 ####################### main source #######################
+introduce(local_version)
 
 ### Version Check ##
-Version_Check_Update(GITHUBURL)
+update_check(local_version,url_version,url_github,path)
 
 ### Asset or BGM ###
 tmp = input('Which do you want Asset or BGM? \n (Asset ⇒ 0 Bgm ⇒ 1 )\n>>').rstrip()
