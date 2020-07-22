@@ -5,7 +5,7 @@ import requests
 import urllib.error
 import urllib.request
 
-version = 3.1
+version = 3.0
 AWSURL = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 BGMURL = 'https://res.bandori.ga/assets/sound/'
 GITHUBURL = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
