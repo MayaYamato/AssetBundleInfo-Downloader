@@ -7,7 +7,7 @@ import urllib.error
 import urllib.request
 
 ### SET VARIABLE ###
-local_version = 3.0
+local_version = 4.0
 url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 url_BGM = 'https://res.bandori.ga/assets/sound/'
 url_version = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
@@ -33,17 +33,31 @@ if not os.path.exists(download_dir_exe):
 def ABI_Download(ver,tmp,OS,dst_path):
     print('ABI Downloading:')
     if len(tmp) > 2:
-        url = AWSURL +str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/AssetBundleInfo'
+        url = url_AWS +str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/AssetBundleInfo'
     else:
-        url = AWSURL +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
-    download_asset(url, dst_path)
+        url = url_AWS +str(ver)+'/'+str(OS)+r'/AssetBundleInfo'
+    mylib.download_file(url, dst_path)
     print('ABI Download complete\nShaping ABI started')
 
+def ABI_Shaping(ver):
+    if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
+        os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
+    with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
+        for line in lines:
+            seiki = r'^(?!.*'+str(ver)+r').*$'
+            txt0=re.sub(seiki,'',line)
+            txt0=re.sub(r'^\n|\r','',txt0)
+            txt0=re.sub(r'@.*?\n','\n',txt0)
+            txt0=re.sub(r'@.*?\Z','\n',txt0)
+            new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n',retxt,txt0)
+            with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
+                f.write(new_txt)
+
 ####### MAIN SOURCE #######
-introduce(local_version)
+mylib.introduce(local_version)
 
 ### Version Check ###
-update_check(local_version,url_version,url_github)
+mylib.update_check(local_version,url_version,url_github)
 
 ### Asset or BGM ###
 tmp = input('Which do you want Asset or BGM? \n (Asset ⇒ 0 Bgm ⇒ 1 )\n>>').rstrip()
@@ -51,13 +65,10 @@ tmp = input('Which do you want Asset or BGM? \n (Asset ⇒ 0 Bgm ⇒ 1 )\n>>').r
 ### ABI/Asset Download ###
 if int(tmp) == 0:
 
-    if not os.path.exists(download_dir_asset):
-        os.makedirs(download_dir_asset)
-
     ### ABI Version ###
     tmp =input('\nWhat version of ABI do you want?\n latest version ⇒ 0\n Direct Input ⇒ \n>>').rstrip()
-    if int(tmp) == 0:
-        with urllib.request.urlopen(VERSIONURL) as response:
+    if len(tmp) <= 1:
+        with urllib.request.urlopen(url_ABIversion) as response:
             html = response.read().decode() #responseで得たbyte列を変換
             ver = html[:-1]
         print(ver)
@@ -74,27 +85,21 @@ if int(tmp) == 0:
         print('ERROR')
 
     ### ABI Shaping ###
-    tmp = input("\nChoose Shaping ABI method\n###Choose Latest if you want to format the latest ABI,\n###Old is effective against ABI before 2020\n(Latest ⇒ 0 Old ⇒ 1)\n>> ").rstrip()
+    print("Choose Shaping ABI method###Choose Latest if you want to format the latest ABI,")
+    tmp = input("###Old is effective against ABI before 2020\n(Latest ⇒ 0 Old ⇒ 1)\n>> ").rstrip()
     
     if int(tmp)==0:
-        tmp = input("Please enter the URL change character string. \n(This character string can be confirmed by packet capture etc. If you do not understand the meaning, ask the author)\nforexample:p3HzsCWjkY\n>>").rstrip()
+        print("Please enter the URL change character string.")
+        print("※This character string can be confirmed by packet capture etc.")
+        print("If you do not understand the meaning, ask the author")
+        tmp = input("forexample:p3HzsCWjkY\n>>").rstrip()
         filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
         dst_path = os.path.join(download_dir_asset, filename)
         ABI_Download(ver,tmp,OS,dst_path)
     
         ### latest ABI Shaping ###
-        if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
-            os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
-        with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
-            for line in lines:
-                seiki = r'^(?!.*'+str(ver)+r').*$'
-                txt0=re.sub(seiki,'',line)
-                txt0=re.sub(r'^\n|\r','',txt0)
-                txt0=re.sub(r'@.*?\n','\n',txt0)
-                txt0=re.sub(r'@.*?\Z','\n',txt0)
-                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/\1\n',txt0)
-                with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
-                    f.write(new_txt)
+        retxt = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/\1\n'
+        ABI_Shaping(ver)
 
     elif int(tmp)==1:
         filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
@@ -102,24 +107,16 @@ if int(tmp) == 0:
         ABI_Download(ver,tmp,OS,dst_path)
 
         ### OLD ABI Shaping ###
-        if os.path.exists(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt'):
-            os.remove(os.getcwd()+r'\asset\AssetBundleInfo ver '+str(ver)+' .txt')
-        with codecs.open(r'asset/AssetBundleInfo(raw) ver '+str(ver)+' .txt',"r","cp932","ignore") as lines:
-            for line in lines:
-                seiki = r'^(?!.*'+str(ver)+r').*$'
-                txt0=re.sub(seiki,'',line)
-                txt0=re.sub(r'^\n|\r','',txt0)
-                txt0=re.sub(r'@.*?\n','\n',txt0)
-                txt0=re.sub(r'@.*?\Z','\n',txt0)
-                new_txt=re.sub(r'^[^a-z]?(.+)\x12.*?\n','https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'/'+str(OS)+r'/\1\n',txt0)
-                with open(r'asset\AssetBundleInfo ver '+str(ver)+' .txt',"a") as f:
-                    f.write(new_txt)
+        retxt = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'/'+str(OS)+r'/\1\n'
+        ABI_Shaping(ver)
+
     else :
         print("ERROR")
     print("Complete\n")
 
     ### All Asset Download ###
-    tmp = input("Do you want to download all asset or only assets that contain a specific string?\n### But not recommended to download:Too many assets. all yes ⇒ 0 only asset ⇒ 1 no ⇒ 2\n>>")
+    print("Do you want to download all asset or only assets that contain a specific string?")
+    tmp = input("### But not recommended to download:Too many assets. all yes ⇒ 0 only asset ⇒ 1 no ⇒ 2\n>>")
     if int(tmp) == 0 :
         print('Loading ABI')
         with open(r'asset/AssetBundleInfo ver '+str(ver)+' .txt') as lines:
@@ -128,9 +125,8 @@ if int(tmp) == 0:
                     continue
                 else:
                     url = line.rstrip('\r\n')
-                    filename = url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):]
-                    dst_path = os.path.join(download_dir_asset, filename)
-                    download_asset(url, dst_path)
+                    dst_path = os.path.join(download_dir_asset, url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):])
+                    mylib.download_file(url, dst_path)
         print("Download complete")
     elif int(tmp) == 1 :
         tmp = input("Enter the specific character string you want:\nex:live2d\n>>")
@@ -142,9 +138,8 @@ if int(tmp) == 0:
                 else:
                     if str(tmp) in line:
                         url = line.rstrip('\r\n')
-                        filename = url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):]
-                        dst_path = os.path.join(download_dir_asset, filename)
-                        download_asset(url, dst_path)
+                        dst_path = os.path.join(download_dir_asset,url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):])
+                        mylib.download_file(url, dst_path)
                     else:
                         continue
     else:
@@ -152,14 +147,9 @@ if int(tmp) == 0:
 
 ### BGM Download ###
 elif int(tmp) == 1:
-
-    if not os.path.exists(download_dir_bgm):
-        os.makedirs(download_dir_bgm)
-
     print('Downloading BGM')
-    filename = os.path.basename('bgm.json')
-    dst_path = os.path.join(download_dir_bgm, filename)
-    download_bgm(BGMURL, dst_path)
+    dst_path = os.path.join(download_dir_bgm, os.path.basename('bgm.json'))
+    mylib.download_content(url_BGM, dst_path)
 
     with open(dst_path) as lines:
         for line in lines:
@@ -167,14 +157,13 @@ elif int(tmp) == 1:
             if m == None:
                 continue
             else:
-                url = BGMURL+str(m.group()[:-4])+'_rip/'+str(m.group()[:-4])+'.mp3'
-                filename = os.path.basename(url)
-                dst_path = os.path.join(download_dir_bgm, filename)
+                url = url_BGM+str(m.group()[:-4])+'_rip/'+str(m.group()[:-4])+'.mp3'
+                dst_path = os.path.join(download_dir_bgm, os.path.basename(url))
                 print(url)
                 if os.path.exists(dst_path):
                     continue
                 else :
-                    download_bgm(url, dst_path)
+                    mylib.download_content(url, dst_path)
     os.remove(os.getcwd()+r'\bgm\bgm.json')
 
 else:
