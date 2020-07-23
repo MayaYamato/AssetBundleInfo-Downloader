@@ -5,8 +5,8 @@ import urllib.request
 
 ### my library ###
 
-def introduce(local_version):
-    #print(os.path.basename(__file__)+' ver '+str(local_version))
+def introduce(name_software,local_version):
+    print(name_software+' ver '+str(local_version))
     print('Created By : VERSUS.log')
     print('Twitter : @227_VS')
     print('Blog : https://raspberrypi422.mydns.jp')
@@ -28,23 +28,20 @@ def download_content(url,dst_path):
     except urllib.error.URLError as __e:
         pass
 
-def update_check(local_version,url_version,url_github):
+def update_check(name_software,local_version,url_version,url_github):
     print('Version Checking ... ')
     with urllib.request.urlopen(url_version) as response:
         html = response.read().decode() 
         remote_version = html[:-1]
     if float(remote_version) - float(local_version) > 0:
         print('New Version Released:'+str(remote_version)+'\n')
-        tmp =input('Do Upgrade? yes or no\n>>')
-        if tmp == 'yes':
-            download_dir_exe = os.getcwd()+r'\update_exe'
-            if not os.path.exists(download_dir_exe):
-                os.makedirs(download_dir_exe)
-            dst_path_exe = os.path.join(download_dir_exe, os.path.basename(os.path.abspath(__file__))[-3]+'.exe')
-            url_download_exe = url_github+r'/'+str(remote_version)+r'/'+os.path.basename(os.path.abspath(__file__))[:-3]+'.exe'
-            download_content(url_download_exe,dst_path_exe)
-            print('Download Complete')
-        else:
-            pass
+        download_dir_exe = os.getcwd()+r'\update_exe'
+        if not os.path.exists(download_dir_exe):
+            os.makedirs(download_dir_exe)
+        dst_path_exe = os.path.join(download_dir_exe, name_software+'.zip')
+        url_download_exe = url_github+r'/'+str(remote_version)+r'/'+name_software+'.zip'
+        print(url_download_exe)
+        download_content(url_download_exe,dst_path_exe)
+        print('Download Complete')
     else:
         print('Latest Version\n')
