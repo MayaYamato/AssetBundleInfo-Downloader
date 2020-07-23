@@ -32,7 +32,7 @@ def update_check(name_software,local_version,url_version,url_github):
     print('Version Checking ... ')
     with urllib.request.urlopen(url_version) as response:
         html = response.read().decode() 
-        remote_version = html[:-1]
+        remote_version = html
     if float(remote_version) - float(local_version) > 0:
         print('New Version Released:'+str(remote_version)+'\n')
         download_dir_exe = os.getcwd()+r'\update_exe'
@@ -44,4 +44,5 @@ def update_check(name_software,local_version,url_version,url_github):
         download_content(url_download_exe,dst_path_exe)
         print('Download Complete')
     else:
+        print(float(remote_version))
         print('Latest Version\n')
