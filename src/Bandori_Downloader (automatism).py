@@ -3,6 +3,7 @@ import re
 import mylib
 import codecs
 import requests
+import configparser
 import urllib.error
 import urllib.request
 
@@ -60,47 +61,45 @@ mylib.introduce(name_software,local_version)
 mylib.update_check(name_software,local_version,url_version,url_github)
 
 ### Loading Settings ###
-with open('settings.ini') as f:
-    lines = f.readlines()
-    tmp0 = lines[0].rstrip('\n')     # ABI or BGM
-    tmp1 = lines[1].rstrip('\n')     # ABI version
-    tmp2 = lines[2].rstrip('\n')     # OS 
-    tmp3 = lines[3].rstrip('\n')     # Latest or old
-    tmp4 = lines[4].rstrip('\n')     # specific word
-    tmp5 = lines[5].rstrip('\n')    # all or specific or no
-    tmp6 = lines[6].rstrip('\n')     # search word No1
-    tmp7 = lines[7].rstrip('\n')     # search word No2
+config_ini = configparser.ConfigParser()
+config_ini.read('settings.ini', encoding='utf-8')
+read_default = config_ini['DEFAULT']
+
+tmps = []
+for i in range(0,6):
+    tmp = read_default['line'+str(i)]
+    tmps.append(tmp)
 
 ### ABI/Asset Download ###
-if int(tmp0) == 0:
+if int(tmps[0]) == 0:
     ### ABI Version ###
-    if len(tmp1) < 3:
+    if len(tmps[1]) < 3:
         with urllib.request.urlopen(url_ABIversion) as response:
-            html = response.read().decode() #responseで得たbyte列を変換
+            html = response.read().decode() 
             ver = html[:-1]
         print("version:"+ver)
     else:
-        ver = tmp1
+        ver = tmps[1]
 
     ### OS Version ###
-    if int(tmp2) == 0:
+    if int(tmps[2]) == 0:
         OS = 'Android'
-    elif int(tmp2) == 1:
+    elif int(tmps[2]) == 1:
         OS = 'iOS'
     else :
         print('ERROR')
 
     ### ABI Shaping ###    
-    if int(tmp3) == 0:
+    if int(tmps[3]) == 0:
         dst_path = os.path.join(download_dir_asset, os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt'))
-        ABI_Download(ver,str(tmp4),OS,dst_path)
+        ABI_Download(ver,str(tmps[4]),OS,dst_path)
         ### latest ABI Shaping ###
-        retxt = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_'+str(tmp4)+'/'+str(OS)+r'/\1\n'
+        retxt = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_'+str(tmps[4])+'/'+str(OS)+r'/\1\n'
         ABI_Shaping(ver)
 
-    elif int(tmp3) == 1:
+    elif int(tmps[3]) == 1:
         dst_path = os.path.join(download_dir_asset, os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt'))
-        ABI_Download(ver,str(tmp3),OS,dst_path)
+        ABI_Download(ver,str(tmps[3]),OS,dst_path)
         ### OLD ABI Shaping ###
         retxt = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'/'+str(OS)+r'/\1\n'
         ABI_Shaping(ver)
@@ -110,7 +109,7 @@ if int(tmp0) == 0:
     print("Complete\n")
 
     ### All Asset Download ###
-    if int(tmp5) == 0 :
+    if int(tmps[5]) == 0 :
         print('Loading ABI')
         with open(r'asset/AssetBundleInfo ver '+str(ver)+' .txt') as lines:
             for line in lines:
@@ -122,8 +121,8 @@ if int(tmp0) == 0:
                     mylib.download_file(url, dst_path)
         print("Download complete")
 
-    elif int(tmp5) == 1 :
-        if str(tmp7) == "no":
+    elif int(tmps[5]) == 1 :
+        if str(tmps[7]) == "no":
             tmp7 = "22/7 音楽の時間 運営はクソ"
 
         print('Loading ABI')
@@ -132,7 +131,7 @@ if int(tmp0) == 0:
                 if "sound/voice/scenario/loginstory13" in line:
                     continue
                 else:
-                    if str(tmp6) in line or str(tmp7) in line:
+                    if str(tmps[6]) in line or str(tmp7) in line:
                         url = line.rstrip('\r\n')
                         dst_path = os.path.join(download_dir_asset,url.replace("/",' ',10)[url.replace("/",' ',10).find(str(OS)):])
                         mylib.download_file(url, dst_path)
@@ -143,7 +142,7 @@ if int(tmp0) == 0:
         exit()
 
 ### BGM Download ###
-elif int(tmp0) == 1:
+elif int(tmps[0]) == 1:
     print('Downloading BGM')
     dst_path = os.path.join(download_dir_bgm, os.path.basename('bgm.json'))
     mylib.download_content(url_BGM, dst_path)
