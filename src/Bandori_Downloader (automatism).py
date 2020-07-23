@@ -8,7 +8,7 @@ import urllib.error
 import urllib.request
 
 ### SET VARIABLE ###
-local_version = 4.1
+local_version = 4.2
 name_software = 'Bandori_Downloader'
 url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 url_BGM = 'https://res.bandori.ga/assets/sound/'
