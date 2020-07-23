@@ -8,13 +8,12 @@ import urllib.request
 
 ### SET VARIABLE ###
 local_version = 4.1
-name_software = 'Bandori_Downloader (conversational)'
+name_software = 'Bandori_Downloader'
 url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 url_BGM = 'https://res.bandori.ga/assets/sound/'
 url_version = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
-url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases/'
+url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases/download'
 url_ABIversion = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt\n'
-name_software = os.path.basename(os.path.abspath(__file__))
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
@@ -58,7 +57,7 @@ def ABI_Shaping(ver):
 mylib.introduce(name_software,local_version)
 
 ### Version Check ###
-mylib.update_check(local_version,url_version,url_github)
+mylib.update_check(name_software,local_version,url_version,url_github)
 
 ### Asset or BGM ###
 tmp = input('Which do you want Asset or BGM? \n (Asset ⇒ 0 Bgm ⇒ 1 )\n>>').rstrip()
@@ -102,7 +101,7 @@ if int(tmp) == 0:
         retxt = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'+str(ver)+'_'+str(tmp)+'/'+str(OS)+r'/\1\n'
         ABI_Shaping(ver)
 
-    elif int(tmp)==1:
+    elif int(tmp) == 1:
         filename = os.path.basename('AssetBundleInfo(raw) ver '+str(ver)+' .txt')
         dst_path = os.path.join(download_dir_asset, filename)
         ABI_Download(ver,tmp,OS,dst_path)

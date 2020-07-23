@@ -8,13 +8,12 @@ import urllib.request
 
 ### SET VARIABLE ###
 local_version = 4.1
-name_software = 'Bandori_Downloader (automatism)'
+name_software = 'Bandori_Downloader'
 url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 url_BGM = 'https://res.bandori.ga/assets/sound/'
 url_version = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
-url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases/'
+url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases//download'
 url_ABIversion = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt\n'
-name_software = os.path.basename(os.path.abspath(__file__))
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 download_dir_asset = os.getcwd()+r'\asset'
@@ -58,7 +57,7 @@ def ABI_Shaping(ver):
 mylib.introduce(name_software,local_version)
 
 ### Version Check ###
-mylib.update_check(local_version,url_version,url_github)
+mylib.update_check(name_software,local_version,url_version,url_github)
 
 ### Loading Settings ###
 with open('settings.ini') as f:
