@@ -5,8 +5,8 @@ import urllib.request
 
 ### my library ###
 
-def introduce(local_version):
-    print(os.path.basename(__file__)+' ver '+str(local_version))
+def introduce(name_software,local_version):
+    print(name_software+' ver '+str(local_version))
     print('Created By : VERSUS.log')
     print('Twitter : @227_VS')
     print('Blog : https://raspberrypi422.mydns.jp')

@@ -55,7 +55,7 @@ def ABI_Shaping(ver):
                 f.write(new_txt)
 
 ####### MAIN SOURCE #######
-mylib.introduce(local_version)
+mylib.introduce(name_software,local_version)
 
 ### Version Check ###
 mylib.update_check(local_version,url_version,url_github)
