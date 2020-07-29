@@ -10,7 +10,7 @@ def introduce(name_software,local_version):
     print('Created By : VERSUS.log')
     print('Twitter : @227_VS')
     print('Blog : https://raspberrypi422.mydns.jp')
-    print('Github : https://github.com/MayaYamato')
+    print('Github : https://github.com/kuragevs')
 
 def download_file(url,dst_path):
     try:

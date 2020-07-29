@@ -12,8 +12,8 @@ local_version = 4.2
 name_software = 'Bandori_Downloader'
 url_AWS = 'https://d2ktlshvcuasnf.cloudfront.net/Release/'
 url_BGM = 'https://res.bandori.ga/assets/sound/'
-url_version = 'https://raw.githubusercontent.com/MayaYamato/Bandori_Downloader/master/version'
-url_github = 'https://github.com/MayaYamato/Bandori_Downloader/releases//download'
+url_version = 'https://raw.githubusercontent.com/kuragevs/Bandori_Downloader/master/version'
+url_github = 'https://github.com/kuragevs/Bandori_Downloader/releases//download'
 url_ABIversion = 'https://raw.githubusercontent.com/esterTion/bangdream_master_db_diff/master/!dataVersion.txt\n'
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
