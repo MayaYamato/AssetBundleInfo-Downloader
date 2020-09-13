@@ -5,7 +5,7 @@ This tool downloads "AssetBundleInfo", asset and music file used in Bandori<br>
 Follow the interaction with the tool<br>
 If you have any question, Contact me  <br>
 https://raspberrypi422.mydns.jp/ <br>
-Twitter: 227_VS <br><br>
+Twitter: Yuki_GVS <br><br>
 
 Due to the recent specification change of lates Bandori server,<br> 
 it is not possible to download unless you know the character string randomly attached to the URL.<br> 
