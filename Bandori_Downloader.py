@@ -22,6 +22,20 @@ download_dir_bgm = os.getcwd()+r'\bgm'
 download_dir_exe = os.getcwd()+r'\update_exe'
 dst_path_exe = os.path.join(download_dir_exe, os.path.basename(os.path.abspath(__file__)))
 
+### Loading Settings ###
+config_ini = configparser.ConfigParser()
+config_ini.read('settings.ini', encoding='utf-8')
+read_default = config_ini['DEFAULT']
+tmps = []
+
+for i in range(0,9):
+    tmp = read_default['line'+str(i)]
+    tmps.append(tmp)
+
+if int(tmps[8]) == 1:
+    import conv
+    exit()
+
 ### MAKE DIRECTORY ###
 if not os.path.exists(download_dir_asset):
     os.makedirs(download_dir_asset)
@@ -59,16 +73,6 @@ mylib.introduce(name_software,local_version)
 
 ### Version Check ###
 mylib.update_check(name_software,local_version,url_version,url_github)
-
-### Loading Settings ###
-config_ini = configparser.ConfigParser()
-config_ini.read('settings.ini', encoding='utf-8')
-read_default = config_ini['DEFAULT']
-
-tmps = []
-for i in range(0,6):
-    tmp = read_default['line'+str(i)]
-    tmps.append(tmp)
 
 ### ABI/Asset Download ###
 if int(tmps[0]) == 0:
