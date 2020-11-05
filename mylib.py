@@ -8,9 +8,9 @@ import urllib.request
 def introduce(name_software,local_version):
     print(name_software+' ver '+str(local_version))
     print('Created By : VERSUS.log')
-    print('Twitter : @227_VS')
+    print('Twitter : ※Frozen')
     print('Blog : https://raspberrypi422.mydns.jp')
-    print('Github : https://github.com/kuragevs')
+    print('Github : https://github.com/yukigvs')
 
 def download_file(url,dst_path):
     try:
